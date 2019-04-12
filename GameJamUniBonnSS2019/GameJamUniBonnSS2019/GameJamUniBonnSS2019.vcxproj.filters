@@ -16,6 +16,9 @@
     <Filter Include="Source Files\ImGUI">
       <UniqueIdentifier>{7d9c6776-0b0d-4e4a-834f-1bf73b4818a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{2f380fbd-4592-4f70-940f-af40849d8e47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
