@@ -125,7 +125,13 @@
     <ClCompile Include="..\ExternalLibs\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\ExternalLibs\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\ExternalLibs\src\glad.c" />
+    <ClCompile Include="ErrorCheck.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelObject.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WindowGLFW.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +143,21 @@
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_textedit.h" />
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="ErrorCheck.h" />
+    <ClInclude Include="ImageLoader.h" />
+    <ClInclude Include="ModelObject.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="WindowGLFW.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\Textures\geilesHerz.png" />
     <Image Include="..\Textures\test.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\FS_ShowMap.glsl" />
+    <None Include="..\Shaders\VS_ShowMap.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
