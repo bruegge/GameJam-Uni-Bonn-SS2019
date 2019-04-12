@@ -3,13 +3,19 @@
 #include "../ImGUI/imgui.h"
 #include "../ImGUI/imgui_impl_glfw.h"
 #include "../ImGUI/imgui_impl_opengl3.h"
+#include "ModelObject.h"
+#include "ErrorCheck.h"
 
 CWindowGLFW* pWindow = nullptr;
-
+CEnvironmentModel* pEnvironment = nullptr;
+CModel* pPlayer = nullptr;
 
 void LoadContent()
 {
 	pWindow = new CWindowGLFW(1000, 800);
+	CErrorCheck::GetOpenGLError(true);
+	pEnvironment = new CEnvironmentModel();
+	CErrorCheck::GetOpenGLError(true);
 
 	{ //GUI
 		ImGui::CreateContext();
@@ -22,6 +28,7 @@ void LoadContent()
 
 void RenderLoop()
 {
+	CErrorCheck::GetOpenGLError(true);
 	glClearColor(0.1f, 0.1f, 0.02f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -36,6 +43,8 @@ void RenderLoop()
 		ImGui::NewFrame();
 		
 		bEnd = pWindow->ManageInputs();
+		
+		pEnvironment->Draw();
 
 		{
 			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
