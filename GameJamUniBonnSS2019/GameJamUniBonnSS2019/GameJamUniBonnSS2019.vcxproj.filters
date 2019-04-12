@@ -78,4 +78,9 @@
       <Filter>Source Files\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Textures\test.bmp">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
