@@ -1,0 +1,3 @@
+0 Textures/carpet.png
+1 Textures/stonetiles.png
+2 Textures/wall.png
