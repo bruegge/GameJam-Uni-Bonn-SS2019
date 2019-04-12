@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Map Editor</title>
+		<style>
+			*{box-sizing:border-box;}
+			html{margin:0;padding:0;}
+			body{
+				margin:0;
+				padding:0;
+				display:flex;
+				flex-direction:column;
+				width:100vw;
+				height:100vh;
+				position:relative;
+			}
+			header{
+				height:40px;
+				background-color:#e0e0e0;
+			}
+			header, #main{
+				display:flex;
+				flex-direction:row;
+				font-size:14px;
+			}
+			header > div{
+				width:300px;
+				line-height:40px;
+				font-weight:bold;
+				font-family:sans-serif;
+				padding:0 20px;
+				background-color:#d0d0d0;
+			}
+			header > ul{
+				display:flex;
+				flex-direction:row;
+				flex:1;
+				margin:0;
+				padding:0;
+				list-style:none;<
+			}
+			header > ul > li{
+				-flex:1;
+				line-height:40px;
+				padding:0 10px;
+				margin:0 10px;
+				cursor:pointer;
+			}
+			header > ul > li:hover{
+				background-color:#f0f0f0;
+			}
+			header > ul > li.toggled{
+				text-decoration:underline;
+			}
+			#main{
+				flex:1;
+			}
+			#left{
+				width:300px;
+				background-color:#d0d0d0;
+				position:relative;
+			}
+			#map{
+				overflow:auto;
+				width:calc(100vw - 300px);
+				height:calc(100vh - 40px);
+				position:relative;
+			}
+			#map > div{
+				width:calc(100 * 30px);
+				height:calc(100 * 30px);
+				display:flex;
+				flex-direction:row;
+				flex-wrap:wrap;
+				position:absolute;
+				left:0;
+				top:0;
+			}
+			#map > div[data-layer='1']{
+				display:flex;
+			}
+			#map > div[data-layer='2']{
+				display:none;
+				background-color:rgba(255,255,255,0.25);
+				background-image: linear-gradient(45deg, rgba(128,128,128,0.25) 25%, transparent 25%), 
+				                  linear-gradient(-45deg, rgba(128,128,128,0.25) 25%, transparent 25%), 
+				                  linear-gradient(45deg, transparent 75%, rgba(128,128,128,0.25) 75%), 
+				                  linear-gradient(-45deg, transparent 75%, rgba(128,128,128,0.25) 75%);
+				background-size: 60px 60px;
+				background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+			}
+			#map > div > img{
+				width:30px;
+				height:30px;
+			}
+			#map_text{
+				display:none;
+				position:absolute;
+				top:40px;
+				left:300px;
+				right:0;
+				bottom:0;
+				width:calc(100vw - 300px);
+				height:calc(100vh - 40px);
+			}
+			#left > div{
+				max-height:calc(100vh - 100px);
+				padding:20px;
+				display:flex;
+				flex-direction:row;
+				flex-wrap:wrap;
+				gap:20px;
+			}
+			#left > header{
+				width:260px;
+				height:20px;
+				line-height:20px;
+				display:block;
+				background-color:unset;
+				font-size:12px;
+				font-weight:bold;
+				font-family:sans-serif;
+				border-bottom:1px solid #a0a0a0;
+				margin:0 20px;
+			}
+			#left > div img.selected{
+				outline:4px solid #ffffff;
+			}
+			#left > footer{
+				position:absolute;
+				left:0;
+				bottom:10px;
+				width:260px;
+				height:20px;
+				line-height:20px;
+				font-size:12px;
+				margin:0 20px;
+				border-top:1px solid #a0a0a0;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<div>
+				Map Editor
+			</div>
+			<ul>
+				<li style="cursor: not-allowed;color:gray;">Tileset laden</li>
+				<li style="cursor: not-allowed;color:gray;">Map importieren</li>
+				<li onclick="exportMap();">Map exportieren</li>
+				<li onclick="initEmptyMap();">Neue Map</li>
+				<li onclick="deactivateLayer2();" class="toggled" data-combined='key'>Layer 1</li>
+				<li onclick="activateLayer2();" data-combined='key'>Layer 2</li>
+			</ul>
+		</header>
+		<section id="main">
+			<section id="left">
+				<header>Tileset</header>
+				<div>
+					<img src="Textures/carpet.png" width="100px" data-tile-id="0">
+					<img src="Textures/stonetiles.png" width="100px" data-tile-id="1">
+					<img src="Textures/wall.png" width="100px" data-tile-id="2">
+				</div>
+				<footer>Version: 0.5</footer>
+			</section>
+			<section id="map">
+				<div data-layer='1'></div>
+				<div data-layer='2'></div>
+			</section>
+		</section>
+		<textarea id="map_text"></textarea>
+		<script>
+			window.mapEditor = {};
+			window.mapEditor.selectedTile = null;
+			function deselectAllTilesInSet(){
+				document.querySelectorAll("#left > div img").forEach(function(img){
+					img.classList.remove("selected"); 
+				});
+			}
+			function selectTileInSet(){
+				deselectAllTilesInSet();
+				this.classList.add("selected");
+				window.mapEditor.selectedTile = this.dataset["tileId"];
+				
+			}
+			document.querySelectorAll("#left > div img").forEach(function(img){
+				img.onclick = selectTileInSet;
+			});
+			function getTileElementFromSetById( tileId ){
+				return document.querySelector("#left > div > img[data-tile-id = '"+tileId+"']");
+			}
+			function replaceTile(){
+				if( window.mapEditor != null ){
+					let element = getTileElementFromSetById(window.mapEditor.selectedTile);
+					this.src = element.src;
+					this.dataset.tileId = window.mapEditor.selectedTile;
+				}
+			}
+			function initEmptyMap(){
+				let firstTile = getTileElementFromSetById(0);
+				let container = document.querySelector("#map > div");
+				for( let i=0; i<100*100; i++){
+					let tile = document.createElement("img");
+					tile.dataset.tileId = firstTile.dataset.tileId;
+					tile.ondragstart = function() { return false; };
+					tile.src = firstTile.src;
+					tile.onclick = replaceTile;
+					container.appendChild(tile);
+				}
+			}
+			function collectMapForExport(){
+				let tiles = document.querySelectorAll("#map > div > img");
+				let text_area = document.querySelector("#map_text");
+				text_area.value="";
+				for( let y = 0; y < 100; y++ ){
+					for( let x=0; x < 100; x++ ){
+						text_area.value += tiles[x+y*100].dataset.tileId + " ";
+					}
+					text_area.value += "\n";
+				}
+			}
+			function exportMap(){
+				let text_area = document.querySelector("#map_text");
+				if( text_area.style.display == "block" ){
+					text_area.style.display = "none";
+				}else{
+					collectMapForExport();
+					text_area.style.display = "block";
+				}
+			}
+			function detoggleAllCombined( key ){
+				document.querySelectorAll("[data-combined='"+key+"']").forEach(function(e){ e.classList.remove('toggled') });
+			}
+			function activateLayer2(){
+				let switches = document.querySelectorAll("header li[data-combined]");
+				switches[0].classList.remove('toggled');
+				switches[1].classList.add('toggled');
+				document.querySelector("#map > div[data-layer = '2']").style.display = "block";
+			}
+			function deactivateLayer2(){
+				let switches = document.querySelectorAll("header li[data-combined]");
+				switches[0].classList.add('toggled');
+				switches[1].classList.remove('toggled');
+				document.querySelector("#map > div[data-layer = '2']").style.display = "none";
+			}
+		</script>
+	</body>
+</html>
