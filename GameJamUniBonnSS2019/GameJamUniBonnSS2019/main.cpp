@@ -18,7 +18,6 @@ void LoadContent()
 		ImGui_ImplGlfw_InitForOpenGL(pWindow->GetWindowID(), true);
 		ImGui_ImplOpenGL3_Init("#version 430");
 	}
-
 }
 
 void RenderLoop()
@@ -35,13 +34,8 @@ void RenderLoop()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-
-
-
-
+		
 		bEnd = pWindow->ManageInputs();
-
 
 		{
 			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
