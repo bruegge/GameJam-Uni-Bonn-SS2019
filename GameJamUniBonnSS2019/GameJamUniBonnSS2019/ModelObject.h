@@ -10,7 +10,6 @@ class CModel
 public:
 	CModel();
 	
-	void Draw();
 protected:
 	
 	struct SVertexData
@@ -28,28 +27,6 @@ protected:
 	GLuint m_nTextureID;
 	glm::vec3 minValues;
 	glm::vec3 maxValues;
-};
-
-class CPlayerModel : public CModel
-{
-public:
-	CPlayerModel();
-	~CPlayerModel();
-	void Draw();
-
-private:
-
-};
-
-class CEnvironmentModel : public CModel
-{
-public:
-	CEnvironmentModel();
-	~CEnvironmentModel();
-	void Draw();
-	void LoadMap(const char* fileName);
-private:
-	GLuint m_nMapSSBO = 0;
 };
 
 

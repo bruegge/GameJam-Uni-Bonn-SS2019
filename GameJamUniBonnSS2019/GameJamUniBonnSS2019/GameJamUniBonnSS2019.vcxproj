@@ -133,6 +133,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WindowGLFW.cpp" />
+    <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternalLibs\ImGUI\imconfig.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="WindowGLFW.h" />
+    <ClInclude Include="WorldMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Textures\geilesHerz.png" />
@@ -157,7 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\FS_ShowMap.glsl" />
+    <None Include="..\Shaders\FS_ShowPlayer.glsl" />
     <None Include="..\Shaders\VS_ShowMap.glsl" />
+    <None Include="..\Shaders\VS_ShowPlayer.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
