@@ -7,10 +7,12 @@
 #include "ErrorCheck.h"
 #include "Player.h"
 #include "WorldMap.h"
+#include "Guards.h"
 
 CWindowGLFW* pWindow = nullptr;
 CWorldMap* pEnvironment = nullptr;
 CPlayer* pPlayer = nullptr;
+CGuards* pGuards = nullptr;
 
 void LoadContent()
 {
@@ -18,7 +20,7 @@ void LoadContent()
 	CErrorCheck::GetOpenGLError(true);
 	pEnvironment = new CWorldMap();
 	pEnvironment->LoadMap("");
-
+	pGuards = new CGuards(pEnvironment);
 	CErrorCheck::GetOpenGLError(true);
 	pPlayer = new CPlayer(pEnvironment);
 
@@ -77,41 +79,20 @@ void RenderLoop()
 		}
 		//END input
 
-		
+		pGuards->Update();
+		if (pGuards->IsInView(pPlayer->GetPosition()))
+		{
+			int nYouLoose = 0;
+			nYouLoose++;
+		}
 		pEnvironment->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)), pPlayer->GetPosition());
 		pPlayer->Draw(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y));
-
+		pGuards->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
+		
+		
 		{
 			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
 
-			/*ImGui::Text("Number instances: %i", pSettings->m_nInfoInstanceCount);               // Display some text (you can use a format strings too)
-			ImGui::Text("ComputeTime CPU: %f ms", pSettings->m_dComputeTimeCPU);               // Display some text (you can use a format strings too)
-			ImGui::Checkbox("Enable WireFrames", &(pSettings->m_bEnableWireframe));      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Enable face culling", &(pSettings->m_bEnableCullFace));      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Enable QuadTree update", &(pSettings->m_bEnableQuadTreeUpdate));      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Enable TJunction elimination", &(pSettings->m_bEnableTJunctionElimination));      // Edit bools storing our window open/close state
-
-			int nRadioButtonValue;
-			ImGui::RadioButton("Number 1", &nRadioButtonValue, 1);
-			ImGui::RadioButton("Number 2", &nRadioButtonValue, 2);
-
-			float fGridSize = static_cast<float>(pSettings->m_nGeometrySize);
-			ImGui::SliderFloat("single grid size", &fGridSize, 2.0f, 33.0f);
-			pSettings->m_nGeometrySize = static_cast<unsigned int>(fGridSize);
-			pSettings->m_nGeometrySize += 1 - pSettings->m_nGeometrySize % 2;
-
-
-			float fMaxQuadTreeDepth = static_cast<float>(pSettings->m_nMaxQuadTreeDepth);
-			ImGui::SliderFloat("QuadTree Max Depth", &fMaxQuadTreeDepth, 0.0f, 20.0f);
-			pSettings->m_nMaxQuadTreeDepth = static_cast<unsigned int>(fMaxQuadTreeDepth);
-
-			ImGui::SliderFloat("QuadTree Division Angle", &pSettings->m_fTileDivisionAngle, 90.0f, 6.0f);
-
-			float fPerlinNoiseCount = static_cast<float>(pSettings->m_nPerlinNoiseCount);
-			ImGui::SliderFloat("Number iterations perlin noise", &fPerlinNoiseCount, 0.0f, 30.0f);
-			pSettings->m_nPerlinNoiseCount = static_cast<unsigned int>(fPerlinNoiseCount);
-
-			*/
 			ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
 			ImGui::End();
 

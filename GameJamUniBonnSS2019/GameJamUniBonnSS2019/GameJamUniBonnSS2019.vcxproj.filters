@@ -72,6 +72,9 @@
     <ClCompile Include="WorldMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Guards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowGLFW.h">
@@ -122,6 +125,9 @@
     <ClInclude Include="WorldMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Guards.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Textures\test.bmp">
@@ -142,6 +148,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="..\Shaders\VS_ShowPlayer.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\FS_ShowGuard.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\VS_ShowGuard.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -126,6 +126,7 @@
     <ClCompile Include="..\ExternalLibs\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\ExternalLibs\src\glad.c" />
     <ClCompile Include="ErrorCheck.cpp" />
+    <ClCompile Include="Guards.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelObject.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_textedit.h" />
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_truetype.h" />
     <ClInclude Include="ErrorCheck.h" />
+    <ClInclude Include="Guards.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="ModelObject.h" />
     <ClInclude Include="Player.h" />
@@ -158,8 +160,10 @@
     <Image Include="..\Textures\test.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\FS_ShowGuard.glsl" />
     <None Include="..\Shaders\FS_ShowMap.glsl" />
     <None Include="..\Shaders\FS_ShowPlayer.glsl" />
+    <None Include="..\Shaders\VS_ShowGuard.glsl" />
     <None Include="..\Shaders\VS_ShowMap.glsl" />
     <None Include="..\Shaders\VS_ShowPlayer.glsl" />
   </ItemGroup>
