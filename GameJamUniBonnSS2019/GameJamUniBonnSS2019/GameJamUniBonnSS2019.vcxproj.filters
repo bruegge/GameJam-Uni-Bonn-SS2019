@@ -156,5 +156,11 @@
     <None Include="..\Shaders\VS_ShowGuard.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="..\Shaders\FS_ShowGuardNoiseBar.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -43,6 +43,9 @@ float GetAngle(glm::vec2 Vector1)
 
 void CPlayer::Move(glm::vec2 direction)
 {
+	m_fSpeed = glm::length(direction) / sqrt(2);
+	float fSpeed = 0.03f;
+	direction *= fSpeed;
 	m_fAngle = GetAngle(direction);
 	m_fWalkAnimation += glm::length(direction)*5.0f;
 	if (m_fWalkAnimation >= 8)
@@ -53,6 +56,16 @@ void CPlayer::Move(glm::vec2 direction)
 	{
 		m_vPosition += direction;
 	}
+}
+
+float CPlayer::GetSpeed()
+{
+	return m_fSpeed;
+}
+
+void CPlayer::ResetSpeed()
+{
+	m_fSpeed = 0;
 }
 
 glm::vec2 CPlayer::GetPosition()

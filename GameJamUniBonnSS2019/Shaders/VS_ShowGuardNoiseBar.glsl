@@ -27,25 +27,19 @@ layout(std430, binding = 0) buffer GuardSSBO
 out VS_OUT
 {
 	vec2 TextureCoordinates;
-	float WalkAnimation;
+	float NoiseLevel;
 } vs_out;
 
 
 void main()
 {	
 	vs_out.TextureCoordinates = vec2(TextureCoordinate.x,1-TextureCoordinate.y);
-	vs_out.WalkAnimation = guard.guard[gl_InstanceID].WalkAnimation;
+	vs_out.NoiseLevel = guard.guard[gl_InstanceID].NoiseLevel;
 
 	vec2 GuardPosition = guard.guard[gl_InstanceID].Position;
-	float direction = guard.guard[gl_InstanceID].Direction;
-	
-	mat2 rotationMatrix;
-	rotationMatrix[0].x = cos(-3.1415926 * 0.5f + direction);
-	rotationMatrix[0].y = sin(-3.1415926 * 0.5f + direction);
-	rotationMatrix[1].x = -sin(-3.1415926 * 0.5f + direction);
-	rotationMatrix[1].y = cos(-3.1415926 * 0.5f + direction);
-
-	vec2 pos = rotationMatrix * Position.xy;
+	vec2 pos = Position.xy * vec2(1,0.2f)+ vec2(0,0.6f);
 
 	gl_Position = viewProjectionMatrix * vec4(pos + GuardPosition,0,1);
 }
+
+

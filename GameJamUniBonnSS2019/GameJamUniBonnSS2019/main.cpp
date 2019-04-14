@@ -20,10 +20,10 @@ void LoadContent()
 	CErrorCheck::GetOpenGLError(true);
 	pEnvironment = new CWorldMap();
 	pEnvironment->LoadMap("");
-	pGuards = new CGuards(pEnvironment);
-	CErrorCheck::GetOpenGLError(true);
 	pPlayer = new CPlayer(pEnvironment);
-
+	pGuards = new CGuards(pEnvironment, pPlayer);
+	CErrorCheck::GetOpenGLError(true);
+	
 	{ //GUI
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -41,7 +41,6 @@ void RenderLoop()
 	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 	bool bEnd = false;
 	while (!bEnd)
@@ -61,17 +60,21 @@ void RenderLoop()
 
 			int axisCount;
 			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
-			float fSpeed = 0.03f;
 			//std::cout << axisCount << std::endl;
-			if (abs(axes[0]) > 0.01f || abs(axes[1]) > 0.01f)
+			if (abs(axes[0]) > 0.00001f || abs(axes[1]) > 0.00001f)
 			{
-				pPlayer->Move(fSpeed * glm::vec2(axes[0], axes[1]));
+				pPlayer->Move(glm::vec2(axes[0], axes[1]));
 			}
-			if (abs(axes[4] + 1.0f) > 0.01f) 
+			else
+			{
+				pPlayer->ResetSpeed();
+			}
+
+			if (abs(axes[4] + 1.0f) > 0.001f) 
 			{ 
 				pPlayer->AddScale((axes[4] + 1.0f) * 0.01f);
 			}
-			if (abs(axes[5] + 1.0f) > 0.01f)
+			if (abs(axes[5] + 1.0f) > 0.001f)
 			{ 
 				pPlayer->AddScale(-(axes[5] + 1.0f) * 0.01f);
 			}
@@ -80,6 +83,7 @@ void RenderLoop()
 		//END input
 
 		pGuards->Update();
+		
 		if (pGuards->IsInView(pPlayer->GetPosition()))
 		{
 			int nYouLoose = 0;

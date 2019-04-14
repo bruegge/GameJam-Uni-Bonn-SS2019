@@ -161,9 +161,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\FS_ShowGuard.glsl" />
+    <None Include="..\Shaders\FS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\FS_ShowMap.glsl" />
     <None Include="..\Shaders\FS_ShowPlayer.glsl" />
     <None Include="..\Shaders\VS_ShowGuard.glsl" />
+    <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\VS_ShowMap.glsl" />
     <None Include="..\Shaders\VS_ShowPlayer.glsl" />
   </ItemGroup>

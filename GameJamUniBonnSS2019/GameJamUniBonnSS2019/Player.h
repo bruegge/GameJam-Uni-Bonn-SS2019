@@ -18,6 +18,8 @@ public:
 	glm::mat4 GetViewProjectionMatrixForMap(float fAspectRatio);
 	void AddScale(float fScaleAdd);
 
+	float GetSpeed();
+	void ResetSpeed();
 private:
 	glm::mat4 GetViewProjectionMatrixForPlayer(float fAspectRatio);
 	
@@ -28,5 +30,6 @@ private:
 	GLuint m_nTextureID;
 	float m_fScale;
 	float m_fWalkAnimation;
+	float m_fSpeed = 0;
 };
 

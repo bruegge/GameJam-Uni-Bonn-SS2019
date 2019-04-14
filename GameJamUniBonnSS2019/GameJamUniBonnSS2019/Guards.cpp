@@ -5,12 +5,15 @@
 #include <time.h>       
 #include "glm/gtx/vector_angle.hpp"
 
-CGuards::CGuards(CWorldMap* pWorldMap)
+CGuards::CGuards(CWorldMap* pWorldMap, CPlayer* pPlayer)
 {
 	srand(time(NULL));
 	m_pWorldMap = pWorldMap;
+	m_pPlayer = pPlayer;
 	m_pShader = new CShader();
+	m_pShaderNoise = new CShader();
 	m_pShader->CreateShaderProgram("../shaders/VS_ShowGuard.glsl", nullptr, nullptr, nullptr, "../shaders/FS_ShowGuard.glsl");
+	m_pShaderNoise->CreateShaderProgram("../shaders/VS_ShowGuardNoiseBar.glsl", nullptr, nullptr, nullptr, "../shaders/FS_ShowGuardNoiseBar.glsl");
 
 	std::vector<const char*> vecTextureGuards;
 	vecTextureGuards.push_back("../textures/geilerTyp.png");
@@ -25,6 +28,15 @@ CGuards::CGuards(CWorldMap* pWorldMap)
 	CErrorCheck::GetOpenGLError(true);
 	m_nTextureID = CTexture::LoadTexture2DArray(vecTextureGuards);
 	CErrorCheck::GetOpenGLError(true);
+	
+	std::vector<const char*> vecTextureNoise;
+	vecTextureNoise.push_back("../textures/NoiseBarGreen.bmp");
+	vecTextureNoise.push_back("../textures/NoiseBarRed.bmp");
+
+	CErrorCheck::GetOpenGLError(true);
+	m_nTextureNoiseID = CTexture::LoadTexture2DArray(vecTextureNoise);
+	CErrorCheck::GetOpenGLError(true);
+	
 	glGenBuffers(1, &m_nGuardSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nGuardSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SGuard) * 100, nullptr, GL_STATIC_DRAW);
@@ -68,10 +80,42 @@ void CGuards::Draw(glm::mat4 mCamera)
 
 	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, m_nCount);
 
+	
+	glBindVertexArray(0);
+	m_pShader->UnBind();
+	CErrorCheck::GetOpenGLError(true);
+
+	DrawNoiseLevel(mCamera);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void CGuards::DrawNoiseLevel(glm::mat4 mCamera)
+{
+	m_pShaderNoise->Bind();
+	glBindVertexArray(m_nVAO);
+	glDisable(GL_DEPTH_TEST);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_nGuardSSBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_nVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nEBO);
+
+	SetTextures(m_pShaderNoise, m_nTextureNoiseID);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SVertexData), (GLvoid*)(0 * sizeof(float))); //Position
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SVertexData), (GLvoid*)(3 * sizeof(float))); //TextureCoordinates
+
+	GLint nUniformLocationViewProjectionMatrix = glGetUniformLocation(m_pShaderNoise->GetID(), "viewProjectionMatrix");
+	glUniformMatrix4fv(nUniformLocationViewProjectionMatrix, 1, GL_FALSE, &(mCamera[0][0]));
+
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, m_nCount);
+
 	glEnable(GL_DEPTH_TEST);
 
 	glBindVertexArray(0);
-	m_pShader->UnBind();
+	m_pShaderNoise->UnBind();
 	CErrorCheck::GetOpenGLError(true);
 }
 
@@ -85,6 +129,7 @@ void CGuards::SetRandomGuards(unsigned int nCount)
 		m_aGuards[i].InitialPosition = m_aGuards[i].Position;
 		m_aGuards[i].PositionToGo = glm::vec2(-1, -1);
 		m_aGuards[i].WalkAnimation = 0;
+		m_aGuards[i].NoiseLevel = 0.0f;
 	}
 	m_nCount = nCount;
 }
@@ -120,6 +165,20 @@ void CGuards::Update()
 			if (static_cast<unsigned int>(m_aGuards[i].Position.y + 2) > static_cast<unsigned int>(m_aGuards[i].PositionToGo.y) && static_cast<unsigned int>(m_aGuards[i].Position.y - 2) < static_cast<unsigned int>(m_aGuards[i].PositionToGo.y))
 			{
 				m_aGuards[i].PositionToGo = glm::vec2(-1, -1);
+			}
+		}
+
+		float fDistanceToPlayer = glm::length(m_aGuards[i].Position - m_pPlayer->GetPosition());
+		if (fDistanceToPlayer > 10)
+		{
+			m_aGuards[i].NoiseLevel = 0;
+		}
+		else
+		{
+			m_aGuards[i].NoiseLevel = (10 - fDistanceToPlayer) * 0.1f * m_pPlayer->GetSpeed() * 4.0f;
+			if (m_aGuards[i].NoiseLevel >= 1.0f)
+			{
+				m_aGuards[i].PositionToGo = m_pPlayer->GetPosition();
 			}
 		}
 	}
@@ -167,7 +226,7 @@ bool CGuards::IsInView(glm::vec2 vPlayerPosition)
 		if (glm::length(vRelativePosition) < 10) //is in range
 		{
 			glm::vec2 vGuardViewDirection = glm::normalize(m_aGuards[i].PositionToGo - m_aGuards[i].Position);
-			if (glm::angle(glm::normalize(vRelativePosition), vGuardViewDirection) < 68.0f / 180.0f * 3.1415926f) //is in view angle
+			if (glm::angle(glm::normalize(vRelativePosition), -vGuardViewDirection) < 68.0f / 180.0f * 3.1415926f) //is in view angle
 			{
 				bool bNoWallInBetween = true;
 				float nCountSteps = 30;
