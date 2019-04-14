@@ -2,6 +2,7 @@
 #include "ModelObject.h"
 #include "WorldMap.h"
 #include "Player.h"
+#include <vector>
 
 class CGuards : public CModel
 {
@@ -12,6 +13,8 @@ public:
 	void Draw(glm::mat4 mCamera);
 	void Update();
 	bool IsInView(glm::vec2 vPlayerPosition);
+	void InitGuards(std::vector<glm::vec2> vecPositions);
+
 
 private:
 	void SetRandomGuards(unsigned int nCount);

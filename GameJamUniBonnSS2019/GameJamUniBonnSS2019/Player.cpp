@@ -157,3 +157,13 @@ void CPlayer::AddScale(float fScaleAdd)
 		m_fScale = 100;
 	}
 }
+
+void CPlayer::AddCakeCounter()
+{
+	m_nCakeCounter++;
+}
+
+unsigned int CPlayer::GetCountCake()
+{
+	return m_nCakeCounter;
+}

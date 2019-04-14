@@ -20,6 +20,9 @@ public:
 
 	float GetSpeed();
 	void ResetSpeed();
+	void AddCakeCounter();
+	unsigned int GetCountCake();
+
 private:
 	glm::mat4 GetViewProjectionMatrixForPlayer(float fAspectRatio);
 	
@@ -31,5 +34,6 @@ private:
 	float m_fScale;
 	float m_fWalkAnimation;
 	float m_fSpeed = 0;
+	unsigned int m_nCakeCounter = 0;
 };
 

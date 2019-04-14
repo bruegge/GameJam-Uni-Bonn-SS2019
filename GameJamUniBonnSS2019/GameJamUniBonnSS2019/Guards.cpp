@@ -7,7 +7,7 @@
 
 CGuards::CGuards(CWorldMap* pWorldMap, CPlayer* pPlayer)
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 	m_pWorldMap = pWorldMap;
 	m_pPlayer = pPlayer;
 	m_pShader = new CShader();
@@ -123,8 +123,8 @@ void CGuards::SetRandomGuards(unsigned int nCount)
 {
 	for (unsigned int i = 0; i < nCount; ++i)
 	{
-		m_aGuards[i].Position.x = rand() % 100;
-		m_aGuards[i].Position.y = rand() % 100;
+		m_aGuards[i].Position.x = static_cast<float>(rand() % 100);
+		m_aGuards[i].Position.y = static_cast<float>(rand() % 100);
 		m_aGuards[i].Direction = static_cast<float>(rand() % 360) / 180 * 3.1415926f;
 		m_aGuards[i].InitialPosition = m_aGuards[i].Position;
 		m_aGuards[i].PositionToGo = glm::vec2(-1, -1);
@@ -142,8 +142,8 @@ void CGuards::Update()
 		if (m_aGuards[i].PositionToGo.x == -1 && m_aGuards[i].PositionToGo.y == -1) //point reached
 		{
 			glm::vec2 vNewPosition;
-			vNewPosition.x = rand() % 21 - 10;
-			vNewPosition.y = rand() % 21 - 10;
+			vNewPosition.x = static_cast<float>(rand() % 21 - 10);
+			vNewPosition.y = static_cast<float>(rand() % 21 - 10);
 
 			m_aGuards[i].PositionToGo = glm::vec2(m_aGuards[i].InitialPosition.x + vNewPosition.x, m_aGuards[i].InitialPosition.y + vNewPosition.y);
 		
@@ -249,4 +249,34 @@ bool CGuards::IsInView(glm::vec2 vPlayerPosition)
 	return false;
 }
 
+void CGuards::InitGuards(std::vector<glm::vec2> vecPositions)
+{
+	m_nCount = vecPositions.size();
+	for (unsigned int i = 0; i < 100; ++i)
+	{
+		if (i < m_nCount) //active cake
+		{
+			m_aGuards[i].Position = vecPositions[i];
+			m_aGuards[i].Direction = static_cast<float>(rand() % 360) / 180 * 3.1415926f;
+			m_aGuards[i].InitialPosition = m_aGuards[i].Position;
+			m_aGuards[i].PositionToGo = glm::vec2(-1, -1);
+			m_aGuards[i].WalkAnimation = 0;
+			m_aGuards[i].NoiseLevel = 0.0f;
 
+		}
+		else //inactive cake
+		{
+			m_aGuards[i].Position = glm::vec2(-1, -1);
+			m_aGuards[i].Direction = static_cast<float>(rand() % 360) / 180 * 3.1415926f;
+			m_aGuards[i].InitialPosition = m_aGuards[i].Position;
+			m_aGuards[i].PositionToGo = glm::vec2(-1, -1);
+			m_aGuards[i].WalkAnimation = 0;
+			m_aGuards[i].NoiseLevel = 0.0f;
+		}
+	}
+
+	//apply changes to SSBO
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nGuardSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SGuard) * m_nCount, m_aGuards, GL_STATIC_DRAW);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}

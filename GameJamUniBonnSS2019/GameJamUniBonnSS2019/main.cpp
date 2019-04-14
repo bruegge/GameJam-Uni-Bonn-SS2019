@@ -7,12 +7,15 @@
 #include "ErrorCheck.h"
 #include "Player.h"
 #include "WorldMap.h"
+#include "Cake.h"
 #include "Guards.h"
+#include <vector>
 
 CWindowGLFW* pWindow = nullptr;
 CWorldMap* pEnvironment = nullptr;
 CPlayer* pPlayer = nullptr;
 CGuards* pGuards = nullptr;
+CCake* pCakes = nullptr;
 
 void LoadContent()
 {
@@ -22,8 +25,24 @@ void LoadContent()
 	pEnvironment->LoadMap("");
 	pPlayer = new CPlayer(pEnvironment);
 	pGuards = new CGuards(pEnvironment, pPlayer);
-	CErrorCheck::GetOpenGLError(true);
+	pCakes = new CCake(pEnvironment, pPlayer);
+
+	std::vector<glm::vec2> vecCakePositions;
+	vecCakePositions.push_back(glm::vec2(20, 60));
+	vecCakePositions.push_back(glm::vec2(70, 54));
+	vecCakePositions.push_back(glm::vec2(44, 24));
+	vecCakePositions.push_back(glm::vec2(11, 80));
+	vecCakePositions.push_back(glm::vec2(89, 10));
+	vecCakePositions.push_back(glm::vec2(46, 77));
+	vecCakePositions.push_back(glm::vec2(66, 38));
+	vecCakePositions.push_back(glm::vec2(94, 35));
+	vecCakePositions.push_back(glm::vec2(8, 92));
+	vecCakePositions.push_back(glm::vec2(55, 15));
+
+	pCakes->InitCakes(vecCakePositions);
+	pGuards->InitGuards(vecCakePositions);
 	
+	CErrorCheck::GetOpenGLError(true);
 	{ //GUI
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -83,7 +102,8 @@ void RenderLoop()
 		//END input
 
 		pGuards->Update();
-		
+		pCakes->Update();
+
 		if (pGuards->IsInView(pPlayer->GetPosition()))
 		{
 			int nYouLoose = 0;
@@ -92,12 +112,13 @@ void RenderLoop()
 		pEnvironment->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)), pPlayer->GetPosition());
 		pPlayer->Draw(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y));
 		pGuards->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
-		
+		pCakes->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
+
 		
 		{
 			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
 
-			ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
+			ImGui::Text("%d / %d Cakes", pPlayer->GetCountCake(), pCakes->GetCountCakes());
 			ImGui::End();
 
 			ImGui::Render();

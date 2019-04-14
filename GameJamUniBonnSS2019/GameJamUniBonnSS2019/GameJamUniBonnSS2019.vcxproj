@@ -125,7 +125,9 @@
     <ClCompile Include="..\ExternalLibs\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\ExternalLibs\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\ExternalLibs\src\glad.c" />
+    <ClCompile Include="Cake.cpp" />
     <ClCompile Include="ErrorCheck.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Guards.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,7 +147,9 @@
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_textedit.h" />
     <ClInclude Include="..\ExternalLibs\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="Cake.h" />
     <ClInclude Include="ErrorCheck.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Guards.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="ModelObject.h" />
@@ -160,10 +164,12 @@
     <Image Include="..\Textures\test.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\FS_ShowCake.glsl" />
     <None Include="..\Shaders\FS_ShowGuard.glsl" />
     <None Include="..\Shaders\FS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\FS_ShowMap.glsl" />
     <None Include="..\Shaders\FS_ShowPlayer.glsl" />
+    <None Include="..\Shaders\VS_ShowCake.glsl" />
     <None Include="..\Shaders\VS_ShowGuard.glsl" />
     <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\VS_ShowMap.glsl" />

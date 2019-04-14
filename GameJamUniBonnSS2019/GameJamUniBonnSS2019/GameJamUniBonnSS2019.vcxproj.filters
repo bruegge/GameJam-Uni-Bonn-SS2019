@@ -75,6 +75,12 @@
     <ClCompile Include="Guards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cake.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowGLFW.h">
@@ -128,6 +134,12 @@
     <ClInclude Include="Guards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Cake.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Textures\test.bmp">
@@ -160,6 +172,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\FS_ShowCake.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\VS_ShowCake.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
