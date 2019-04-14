@@ -14,6 +14,7 @@ public:
 	void Update();
 	void InitCakes(std::vector<glm::vec2> vecPositions);
 	unsigned int GetCountCakes();
+	void ResetGame();
 
 private:
 
@@ -29,6 +30,7 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	unsigned int m_nCount = 0;
 	SCake m_aCakes[100];
+	SCake m_aInitCakes[100];
 	GLuint m_nCakeSSBO = 0;
 
 };

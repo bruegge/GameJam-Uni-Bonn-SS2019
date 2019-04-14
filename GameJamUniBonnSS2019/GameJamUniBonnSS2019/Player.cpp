@@ -167,3 +167,9 @@ unsigned int CPlayer::GetCountCake()
 {
 	return m_nCakeCounter;
 }
+
+void CPlayer::ResetGame()
+{
+	m_vPosition = glm::vec2(10, 10);
+	m_fAngle = 3;
+}

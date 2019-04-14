@@ -61,7 +61,14 @@ GLuint CTexture::LoadTexture2DArray(std::vector<const char*>& pPath)
 		CErrorCheck::GetOpenGLError(true);
 		glGenTextures(1, &result);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, result);
-		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA32F, width, height, pPath.size());
+		if (nrChannels == 3)
+		{
+			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB32F, width, height, pPath.size());
+		}
+		if (nrChannels == 4)
+		{
+			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA32F, width, height, pPath.size());
+		}
 		CErrorCheck::GetOpenGLError(true);
 
 

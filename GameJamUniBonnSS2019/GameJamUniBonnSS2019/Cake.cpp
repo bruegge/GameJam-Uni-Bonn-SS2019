@@ -75,6 +75,10 @@ void CCake::InitCakes(std::vector<glm::vec2> vecPositions)
 			m_aCakes[i].Position = glm::vec2(0, 0);
 			m_aCakes[i].fill1 = 0.0f;
 		}
+
+		m_aInitCakes[i].Available = m_aCakes[i].Available;
+		m_aInitCakes[i].fill1 = m_aCakes[i].fill1;
+		m_aInitCakes[i].Position = m_aCakes[i].Position;
 	}
 
 	//apply changes to SSBO
@@ -113,3 +117,12 @@ unsigned int CCake::GetCountCakes()
 	return m_nCount;
 }
 
+void CCake::ResetGame()
+{
+	for (unsigned int i = 0; i < 100; ++i)
+	{
+		m_aCakes[i].Available = m_aInitCakes[i].Available;
+		m_aCakes[i].fill1 = m_aInitCakes[i].fill1;
+		m_aCakes[i].Position = m_aInitCakes[i].Position;
+	}
+}

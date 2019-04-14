@@ -10,12 +10,15 @@
 #include "Cake.h"
 #include "Guards.h"
 #include <vector>
+#include "GameState.h"
+#include "MenuGame.h"
 
 CWindowGLFW* pWindow = nullptr;
 CWorldMap* pEnvironment = nullptr;
 CPlayer* pPlayer = nullptr;
 CGuards* pGuards = nullptr;
 CCake* pCakes = nullptr;
+CMenuGame* pMenuGame = nullptr;
 
 void LoadContent()
 {
@@ -26,18 +29,21 @@ void LoadContent()
 	pPlayer = new CPlayer(pEnvironment);
 	pGuards = new CGuards(pEnvironment, pPlayer);
 	pCakes = new CCake(pEnvironment, pPlayer);
+	CMenuGame::Init(pGuards);
+	pMenuGame = CMenuGame::GetMenu();
+	CGameState::SetGameState(CGameState::EGameState::InMenu);
 
 	std::vector<glm::vec2> vecCakePositions;
 	vecCakePositions.push_back(glm::vec2(20, 60));
 	vecCakePositions.push_back(glm::vec2(70, 54));
-	vecCakePositions.push_back(glm::vec2(44, 24));
+	vecCakePositions.push_back(glm::vec2(45, 24));
 	vecCakePositions.push_back(glm::vec2(11, 80));
 	vecCakePositions.push_back(glm::vec2(89, 10));
-	vecCakePositions.push_back(glm::vec2(46, 77));
-	vecCakePositions.push_back(glm::vec2(66, 38));
+	vecCakePositions.push_back(glm::vec2(47, 77));
+	vecCakePositions.push_back(glm::vec2(67, 38));
 	vecCakePositions.push_back(glm::vec2(94, 35));
 	vecCakePositions.push_back(glm::vec2(8, 92));
-	vecCakePositions.push_back(glm::vec2(55, 15));
+	vecCakePositions.push_back(glm::vec2(54, 15));
 
 	pCakes->InitCakes(vecCakePositions);
 	pGuards->InitGuards(vecCakePositions);
@@ -52,6 +58,74 @@ void LoadContent()
 	}
 }
 
+void Update()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	//input
+	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+	if (1 == present)
+	{
+
+		int axisCount;
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
+		//std::cout << axisCount << std::endl;
+		if (abs(axes[0]) > 0.00001f || abs(axes[1]) > 0.00001f)
+		{
+			pPlayer->Move(glm::vec2(axes[0], axes[1]));
+		}
+		else
+		{
+			pPlayer->ResetSpeed();
+		}
+
+		if (abs(axes[4] + 1.0f) > 0.001f)
+		{
+			pPlayer->AddScale((axes[4] + 1.0f) * 0.01f);
+		}
+		if (abs(axes[5] + 1.0f) > 0.001f)
+		{
+			pPlayer->AddScale(-(axes[5] + 1.0f) * 0.01f);
+		}
+
+	}
+	//END input
+
+	pGuards->Update();
+	pCakes->Update();
+
+	if (pGuards->IsInView(pPlayer->GetPosition()))
+	{
+		int nYouLoose = 0;
+		nYouLoose++;
+	}
+}
+
+void Draw()
+{
+	pEnvironment->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)), pPlayer->GetPosition());
+	pPlayer->Draw(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y));
+	pGuards->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
+	pCakes->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
+
+	{
+		ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
+
+		ImGui::Text("%d / %d Cakes", pPlayer->GetCountCake(), pCakes->GetCountCakes());
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
+}
+
+void DrawMenu()
+{
+
+}
+
 void RenderLoop()
 {
 	CErrorCheck::GetOpenGLError(true);
@@ -62,68 +136,74 @@ void RenderLoop()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	bool bEnd = false;
-	while (!bEnd)
+	float fAxisDirection = 0.0f;
+	bool bIsButtonPressed = false;
+	unsigned int nButtonPressTime = 0;
+
+	while (!bEnd && CGameState::GetGameState() != CGameState::EGameState::Exit)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color and the depth buffer
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		
+	
 		bEnd = pWindow->ManageInputs();
 		
-		//input
-		int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
-		if (1 == present)
-		{
 
-			int axisCount;
-			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
-			//std::cout << axisCount << std::endl;
-			if (abs(axes[0]) > 0.00001f || abs(axes[1]) > 0.00001f)
+		const float* axes = nullptr;
+		const unsigned char* buttons;
+		int axisCount;
+		int count;
+
+		switch (CGameState::GetGameState())
+		{
+		case CGameState::EGameState::InMenu:
+			axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
+			
+			buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+			pMenuGame->Update(axes[1]);
+			if (buttons[0] == GLFW_PRESS)
 			{
-				pPlayer->Move(glm::vec2(axes[0], axes[1]));
+				if(nButtonPressTime == 0)
+					pMenuGame->SelectButton();
+				nButtonPressTime++;
+				if (nButtonPressTime > 33)
+				{
+					nButtonPressTime = 0;
+				}
+
 			}
 			else
 			{
-				pPlayer->ResetSpeed();
+				bIsButtonPressed = false;
+				nButtonPressTime = 0;
 			}
+			pMenuGame->Draw();
+			break;
 
-			if (abs(axes[4] + 1.0f) > 0.001f) 
-			{ 
-				pPlayer->AddScale((axes[4] + 1.0f) * 0.01f);
-			}
-			if (abs(axes[5] + 1.0f) > 0.001f)
-			{ 
-				pPlayer->AddScale(-(axes[5] + 1.0f) * 0.01f);
-			}
+		case CGameState::EGameState::StartGame:
+			CGameState::SetGameState(CGameState::EGameState::IsPlaying);
+			pGuards->ResetGame();
+			pPlayer->ResetGame();
+			pCakes->ResetGame();
+			break;
 
+
+		case CGameState::EGameState::IsPlaying:
+			Update();
+			if (glfwGetKey(pWindow->GetWindowID(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			{
+				CGameState::SetGameState(CGameState::EGameState::InMenu);
+			}
+			Draw();
+			break;
+
+		default:
+			break;
 		}
-		//END input
 
-		pGuards->Update();
-		pCakes->Update();
-
-		if (pGuards->IsInView(pPlayer->GetPosition()))
+		if (CGameState::GetGameState() == CGameState::EGameState::InMenu)
 		{
-			int nYouLoose = 0;
-			nYouLoose++;
+			pMenuGame->Draw();
 		}
-		pEnvironment->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)), pPlayer->GetPosition());
-		pPlayer->Draw(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y));
-		pGuards->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
-		pCakes->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
-
-		
-		{
-			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::Text("%d / %d Cakes", pPlayer->GetCountCake(), pCakes->GetCountCakes());
-			ImGui::End();
-
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		}
+	
 
 		pWindow->SwapBuffers();
 	}

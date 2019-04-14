@@ -3,6 +3,7 @@
 #include "WorldMap.h"
 #include "Player.h"
 #include <vector>
+#include "MenuGame.h"
 
 class CGuards : public CModel
 {
@@ -14,7 +15,7 @@ public:
 	void Update();
 	bool IsInView(glm::vec2 vPlayerPosition);
 	void InitGuards(std::vector<glm::vec2> vecPositions);
-
+	void ResetGame();
 
 private:
 	void SetRandomGuards(unsigned int nCount);
@@ -40,6 +41,7 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	unsigned int m_nCount = 0;
 	SGuard m_aGuards[100];
+	SGuard m_aInitialGuards[100];
 	GLuint m_nGuardSSBO = 0;
 
 };

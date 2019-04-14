@@ -4,6 +4,7 @@
 #include <stdlib.h>     
 #include <time.h>       
 #include "glm/gtx/vector_angle.hpp"
+#include "GameState.h"
 
 CGuards::CGuards(CWorldMap* pWorldMap, CPlayer* pPlayer)
 {
@@ -241,6 +242,8 @@ bool CGuards::IsInView(glm::vec2 vPlayerPosition)
 				}
 				if (bNoWallInBetween)
 				{
+					CGameState::SetGameState(CGameState::EGameState::InMenu);
+					CMenuGame::GetMenu()->SetMenuState(CMenuGame::EMenuState::MissionFailed);
 					return true;
 				}
 			}
@@ -273,10 +276,19 @@ void CGuards::InitGuards(std::vector<glm::vec2> vecPositions)
 			m_aGuards[i].WalkAnimation = 0;
 			m_aGuards[i].NoiseLevel = 0.0f;
 		}
+		m_aInitialGuards[i] = m_aGuards[i];
 	}
 
 	//apply changes to SSBO
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nGuardSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SGuard) * m_nCount, m_aGuards, GL_STATIC_DRAW);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+void CGuards::ResetGame()
+{
+	for (unsigned int i = 0; i < 100; ++i)
+	{
+		m_aGuards[i] = m_aInitialGuards[i];
+	}
 }

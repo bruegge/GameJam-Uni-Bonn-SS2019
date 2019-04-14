@@ -60,7 +60,7 @@ bool CWindowGLFW::ManageInputs() const
 	glfwPollEvents();
 
 
-	return glfwGetKey(m_pWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(m_pWindow); //stop program when closing the window or pressing "escape"
+	return glfwWindowShouldClose(m_pWindow); //stop program when closing the window or pressing "escape"
 }
 
 

@@ -81,6 +81,9 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MenuGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowGLFW.h">
@@ -140,6 +143,9 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MenuGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Textures\test.bmp">
@@ -178,6 +184,18 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="..\Shaders\VS_ShowCake.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\FS_ShowMenu.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\VS_ShowMenu.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\FS_ShowMenuSelection.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\VS_ShowMenuSelection.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

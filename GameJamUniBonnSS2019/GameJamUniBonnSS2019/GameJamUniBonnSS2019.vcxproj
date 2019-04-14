@@ -131,6 +131,7 @@
     <ClCompile Include="Guards.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuGame.cpp" />
     <ClCompile Include="ModelObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Guards.h" />
     <ClInclude Include="ImageLoader.h" />
+    <ClInclude Include="MenuGame.h" />
     <ClInclude Include="ModelObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shader.h" />
@@ -168,11 +170,15 @@
     <None Include="..\Shaders\FS_ShowGuard.glsl" />
     <None Include="..\Shaders\FS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\FS_ShowMap.glsl" />
+    <None Include="..\Shaders\FS_ShowMenu.glsl" />
+    <None Include="..\Shaders\FS_ShowMenuSelection.glsl" />
     <None Include="..\Shaders\FS_ShowPlayer.glsl" />
     <None Include="..\Shaders\VS_ShowCake.glsl" />
     <None Include="..\Shaders\VS_ShowGuard.glsl" />
     <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl" />
     <None Include="..\Shaders\VS_ShowMap.glsl" />
+    <None Include="..\Shaders\VS_ShowMenu.glsl" />
+    <None Include="..\Shaders\VS_ShowMenuSelection.glsl" />
     <None Include="..\Shaders\VS_ShowPlayer.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -22,6 +22,7 @@ public:
 	void ResetSpeed();
 	void AddCakeCounter();
 	unsigned int GetCountCake();
+	void ResetGame();
 
 private:
 	glm::mat4 GetViewProjectionMatrixForPlayer(float fAspectRatio);

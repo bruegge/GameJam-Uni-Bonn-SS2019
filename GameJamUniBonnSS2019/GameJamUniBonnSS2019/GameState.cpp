@@ -1,12 +1,24 @@
 #include "GameState.h"
 
+static CGameState::EGameState eState = CGameState::EGameState::InMenu;
+static unsigned int nLevel = 0;
 
-
-CGameState::CGameState()
+unsigned int CGameState::GetLevelNumber()
 {
+	return nLevel;
 }
 
-
-CGameState::~CGameState()
+CGameState::EGameState CGameState::GetGameState()
 {
+	return eState;
+}
+
+void CGameState::SetGameState(CGameState::EGameState eGameState)
+{
+	eState = eGameState;
+}
+
+void CGameState::SetLevelNumber(unsigned int nLevelNumber)
+{
+	nLevel = nLevelNumber;
 }
