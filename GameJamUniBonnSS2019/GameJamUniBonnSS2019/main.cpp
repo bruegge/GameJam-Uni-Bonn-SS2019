@@ -12,6 +12,7 @@
 #include <vector>
 #include "GameState.h"
 #include "MenuGame.h"
+#include "StoneGame.h"
 
 CWindowGLFW* pWindow = nullptr;
 CWorldMap* pEnvironment = nullptr;
@@ -19,6 +20,7 @@ CPlayer* pPlayer = nullptr;
 CGuards* pGuards = nullptr;
 CCake* pCakes = nullptr;
 CMenuGame* pMenuGame = nullptr;
+CStoneGame* pStoneGame = nullptr;
 
 void LoadContent()
 {
@@ -27,11 +29,13 @@ void LoadContent()
 	pEnvironment = new CWorldMap();
 	pEnvironment->LoadMap("");
 	pPlayer = new CPlayer(pEnvironment);
+	pStoneGame = new CStoneGame(pPlayer, pEnvironment);
 	pGuards = new CGuards(pEnvironment, pPlayer);
 	pCakes = new CCake(pEnvironment, pPlayer);
 	CMenuGame::Init(pGuards);
 	pMenuGame = CMenuGame::GetMenu();
 	CGameState::SetGameState(CGameState::EGameState::InMenu);
+
 
 	std::vector<glm::vec2> vecCakePositions;
 	vecCakePositions.push_back(glm::vec2(20, 60));
@@ -95,6 +99,7 @@ void Update()
 
 	pGuards->Update();
 	pCakes->Update();
+	pStoneGame->Update();
 
 	if (pGuards->IsInView(pPlayer->GetPosition()))
 	{
@@ -106,24 +111,21 @@ void Update()
 void Draw()
 {
 	pEnvironment->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)), pPlayer->GetPosition());
+	pStoneGame->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
+	pCakes->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
 	pPlayer->Draw(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y));
 	pGuards->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
-	pCakes->Draw(pPlayer->GetViewProjectionMatrixForMap(static_cast<float>(pWindow->GetWindowSize().x) / static_cast<float>(pWindow->GetWindowSize().y)));
-
+	
 	{
 		ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
 
 		ImGui::Text("%d / %d Cakes", pPlayer->GetCountCake(), pCakes->GetCountCakes());
+		ImGui::Text("%d Stones", pPlayer->GetCountStones());
 		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
-}
-
-void DrawMenu()
-{
-
 }
 
 void RenderLoop()
@@ -191,6 +193,29 @@ void RenderLoop()
 			if (glfwGetKey(pWindow->GetWindowID(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			{
 				CGameState::SetGameState(CGameState::EGameState::InMenu);
+			}
+			buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+			if (buttons[0] == GLFW_PRESS)
+			{
+				if (nButtonPressTime == 0)
+				{
+					if (pPlayer->GetCountStones() > 0)
+					{
+						pStoneGame->Fire();
+						pPlayer->FireStone();
+					}
+				}
+				nButtonPressTime++;
+				if (nButtonPressTime > 33)
+				{
+					nButtonPressTime = 0;
+				}
+
+			}
+			else
+			{
+				bIsButtonPressed = false;
+				nButtonPressTime = 0;
 			}
 			Draw();
 			break;

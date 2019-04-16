@@ -23,6 +23,8 @@ public:
 	void AddCakeCounter();
 	unsigned int GetCountCake();
 	void ResetGame();
+	unsigned int GetCountStones();
+	void FireStone();
 
 private:
 	glm::mat4 GetViewProjectionMatrixForPlayer(float fAspectRatio);
@@ -36,5 +38,6 @@ private:
 	float m_fWalkAnimation;
 	float m_fSpeed = 0;
 	unsigned int m_nCakeCounter = 0;
+	unsigned int m_nCountStones = 5;
 };
 

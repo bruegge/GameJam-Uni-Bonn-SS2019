@@ -16,7 +16,6 @@ out VS_OUT
 {
 	vec2 TextureCoordinates;
 	flat uint Instance;
-	flat uint IsPlayerPosition;
 } vs_out;
 
 
@@ -27,22 +26,8 @@ void main()
 	MapCoordinate.x = gl_InstanceID % 100;
 	MapCoordinate.y = gl_InstanceID / 100;
 
-	if(MapCoordinate.x == uint(playerPosition.x+0.5f) && MapCoordinate.y == uint(playerPosition.y+0.5f))
-	{
-		vs_out.IsPlayerPosition = 1;
-	}
-	else
-	{
-		vs_out.IsPlayerPosition = 0;
-	}
-
-	//vs_out.Instance = map.map[gl_InstanceID];	
-	//vs_out.TextureCoordinates = TextureCoordinates;
-
 	vs_out.Instance = map.map[gl_InstanceID];	
 	vs_out.TextureCoordinates = TextureCoordinate;
-
-
 
 	gl_Position = viewProjectionMatrix * vec4(Position.xy + MapCoordinate,0,1);
 }

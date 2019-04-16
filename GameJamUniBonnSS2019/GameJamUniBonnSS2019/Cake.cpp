@@ -7,7 +7,7 @@ CCake::CCake(CWorldMap* pWorldMap, CPlayer* pPlayer)
 	m_pPlayer = pPlayer;
 	m_pShader = new CShader();
 	m_pShader->CreateShaderProgram("../shaders/VS_ShowCake.glsl", nullptr, nullptr, nullptr, "../shaders/FS_ShowCake.glsl");
-	m_nTextureID = CTexture::LoadTexture2D("../textures/cake.bmp");
+	m_nTextureID = CTexture::LoadTexture2D("../textures/cake.png");
 
 	glGenBuffers(1, &m_nCakeSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nCakeSSBO);

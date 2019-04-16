@@ -135,6 +135,7 @@
     <ClCompile Include="ModelObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="StoneGame.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WindowGLFW.cpp" />
     <ClCompile Include="WorldMap.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ModelObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="StoneGame.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="WindowGLFW.h" />
     <ClInclude Include="WorldMap.h" />
@@ -173,6 +175,7 @@
     <None Include="..\Shaders\FS_ShowMenu.glsl" />
     <None Include="..\Shaders\FS_ShowMenuSelection.glsl" />
     <None Include="..\Shaders\FS_ShowPlayer.glsl" />
+    <None Include="..\Shaders\FS_ShowStone.glsl" />
     <None Include="..\Shaders\VS_ShowCake.glsl" />
     <None Include="..\Shaders\VS_ShowGuard.glsl" />
     <None Include="..\Shaders\VS_ShowGuardNoiseBar.glsl" />
@@ -180,6 +183,7 @@
     <None Include="..\Shaders\VS_ShowMenu.glsl" />
     <None Include="..\Shaders\VS_ShowMenuSelection.glsl" />
     <None Include="..\Shaders\VS_ShowPlayer.glsl" />
+    <None Include="..\Shaders\VS_ShowStone.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

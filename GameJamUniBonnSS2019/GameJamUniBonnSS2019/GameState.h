@@ -12,8 +12,17 @@ public:
 		Exit = 4,
 	};
 
+	enum EGameDegreeOfDifficulty : unsigned int
+	{
+		easy = 0,
+		mid = 1,
+		hard = 2,
+	};
+
 	static unsigned int GetLevelNumber();
 	static EGameState GetGameState();
+	static EGameDegreeOfDifficulty GetDegreeOfDifficulty();
+	static void SetDegreeOfDifficulty(EGameDegreeOfDifficulty eDegree);
 	static void SetGameState(EGameState eGameState);
 	static void SetLevelNumber(unsigned int nLevelNumber);
 };

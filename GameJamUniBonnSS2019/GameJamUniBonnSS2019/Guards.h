@@ -16,6 +16,8 @@ public:
 	bool IsInView(glm::vec2 vPlayerPosition);
 	void InitGuards(std::vector<glm::vec2> vecPositions);
 	void ResetGame();
+	void HearSound(glm::vec2 vPosition);
+	static CGuards* GetGuards();
 
 private:
 	void SetRandomGuards(unsigned int nCount);

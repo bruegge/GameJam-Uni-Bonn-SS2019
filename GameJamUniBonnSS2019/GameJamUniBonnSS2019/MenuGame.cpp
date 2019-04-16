@@ -30,18 +30,18 @@ CMenuGame::CMenuGame(CGuards* pGuards)
 	m_pShaderSelected->CreateShaderProgram("../shaders/VS_ShowMenuSelection.glsl", nullptr, nullptr, nullptr, "../shaders/FS_ShowMenuSelection.glsl");
 
 	std::vector<const char*> vecTextureMenu;
-	vecTextureMenu.push_back("../textures/MenuStart.bmp");
-	vecTextureMenu.push_back("../textures/MenuContinueGame.bmp");
-	vecTextureMenu.push_back("../textures/MenuCredits.bmp");
-	vecTextureMenu.push_back("../textures/MenuOptions.bmp");
-	vecTextureMenu.push_back("../textures/MenuNextLevel.bmp");
-	vecTextureMenu.push_back("../textures/MenuMissionFailed.bmp");
+	vecTextureMenu.push_back("../textures/MenuStart.png");
+	vecTextureMenu.push_back("../textures/MenuContinueGame.png");
+	vecTextureMenu.push_back("../textures/MenuCredits.png");
+	vecTextureMenu.push_back("../textures/MenuOptions.png");
+	vecTextureMenu.push_back("../textures/MenuNextLevel.png");
+	vecTextureMenu.push_back("../textures/MenuMissionFailed.png");
 
 	CErrorCheck::GetOpenGLError(true);
 	m_nTextureID = CTexture::LoadTexture2DArray(vecTextureMenu);
 	CErrorCheck::GetOpenGLError(true);
 
-	m_nTextureSelected = CTexture::LoadTexture2D("../textures/MenuSelect.bmp");
+	m_nTextureSelected = CTexture::LoadTexture2D("../textures/MenuSelect.png");
 }
 
 CMenuGame::~CMenuGame()
@@ -267,16 +267,18 @@ void CMenuGame::SelectButton()
 		if (m_nSelectedButton == 0) //easy
 		{
 			m_eMenuState = EMenuState::StartMenu;
+			CGameState::SetDegreeOfDifficulty(CGameState::EGameDegreeOfDifficulty::easy);
 			m_nSelectedButton = 1;
 		}
 		if (m_nSelectedButton == 1) //mid
 		{
 			m_eMenuState = EMenuState::StartMenu;
-			m_nSelectedButton = 1;
+			CGameState::SetDegreeOfDifficulty(CGameState::EGameDegreeOfDifficulty::mid); m_nSelectedButton = 1;
 		}
 		if (m_nSelectedButton == 2) //hard
 		{
 			m_eMenuState = EMenuState::StartMenu;
+			CGameState::SetDegreeOfDifficulty(CGameState::EGameDegreeOfDifficulty::hard);
 			m_nSelectedButton = 1;
 		}
 		break;

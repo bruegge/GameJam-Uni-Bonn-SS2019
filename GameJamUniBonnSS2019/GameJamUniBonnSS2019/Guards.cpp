@@ -6,8 +6,11 @@
 #include "glm/gtx/vector_angle.hpp"
 #include "GameState.h"
 
+static CGuards* pGuards;
+
 CGuards::CGuards(CWorldMap* pWorldMap, CPlayer* pPlayer)
 {
+	pGuards = this;
 	srand(static_cast<unsigned int>(time(NULL)));
 	m_pWorldMap = pWorldMap;
 	m_pPlayer = pPlayer;
@@ -224,10 +227,32 @@ bool CGuards::IsInView(glm::vec2 vPlayerPosition)
 	for (unsigned int i = 0; i < m_nCount; ++i)
 	{
 		glm::vec2 vRelativePosition = m_aGuards[i].Position - vPlayerPosition;
-		if (glm::length(vRelativePosition) < 10) //is in range
+
+		CGameState::EGameDegreeOfDifficulty eDegree = CGameState::GetDegreeOfDifficulty();
+		float fRange = 0;
+		float fAngle = 0;
+		switch (eDegree)
+		{
+		case CGameState::easy:
+			fRange = 5;
+			fAngle = 30.0f;
+			break;
+		case CGameState::mid:
+			fRange = 7;
+			fAngle = 45.0f;
+			break;
+		case CGameState::hard:
+			fRange = 10;
+			fAngle = 68.0f;
+			break;
+		default:
+			break;
+		}
+
+		if (glm::length(vRelativePosition) < fRange) //is in range
 		{
 			glm::vec2 vGuardViewDirection = glm::normalize(m_aGuards[i].PositionToGo - m_aGuards[i].Position);
-			if (glm::angle(glm::normalize(vRelativePosition), -vGuardViewDirection) < 68.0f / 180.0f * 3.1415926f) //is in view angle
+			if (glm::angle(glm::normalize(vRelativePosition), -vGuardViewDirection) < fAngle / 180.0f * 3.1415926f) //is in view angle
 			{
 				bool bNoWallInBetween = true;
 				float nCountSteps = 30;
@@ -291,4 +316,20 @@ void CGuards::ResetGame()
 	{
 		m_aGuards[i] = m_aInitialGuards[i];
 	}
+}
+
+void CGuards::HearSound(glm::vec2 vPosition)
+{
+	for (unsigned int i = 0; i < m_nCount; ++i)
+	{
+		if (glm::length(vPosition - m_aGuards[i].Position) < 10)
+		{
+			m_aGuards[i].PositionToGo = vPosition;
+		}
+	}
+}
+
+CGuards* CGuards::GetGuards()
+{
+	return pGuards;
 }

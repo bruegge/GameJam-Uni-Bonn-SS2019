@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Texture.h"
 #include "glm/gtx/vector_angle.hpp"
+#include "StoneGame.h"
 
 CPlayer::CPlayer(CWorldMap* pWorldMap)
 {
@@ -55,6 +56,8 @@ void CPlayer::Move(glm::vec2 direction)
 	if (m_pWorldMap->CollisionDetection(m_vPosition + direction))
 	{
 		m_vPosition += direction;
+		unsigned int nCountGrapStone = CStoneGame::GetStones()->GrapStone(m_vPosition);
+		m_nCountStones += nCountGrapStone;
 	}
 }
 
@@ -172,4 +175,14 @@ void CPlayer::ResetGame()
 {
 	m_vPosition = glm::vec2(10, 10);
 	m_fAngle = 3;
+}
+
+unsigned int CPlayer::GetCountStones()
+{
+	return m_nCountStones;
+}
+
+void CPlayer::FireStone()
+{
+	m_nCountStones--;
 }
